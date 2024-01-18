@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -62,6 +64,14 @@ void Error_Handler(void);
 #define LeftWheelEncoderChannelA_EXTI_IRQn EXTI9_5_IRQn
 #define LeftWheelEncoderChannelB_Pin GPIO_PIN_8
 #define LeftWheelEncoderChannelB_GPIO_Port GPIOE
+#define GreenLED_Pin GPIO_PIN_12
+#define GreenLED_GPIO_Port GPIOD
+#define OrangeLED_Pin GPIO_PIN_13
+#define OrangeLED_GPIO_Port GPIOD
+#define RedLED_Pin GPIO_PIN_14
+#define RedLED_GPIO_Port GPIOD
+#define BlueLED_Pin GPIO_PIN_15
+#define BlueLED_GPIO_Port GPIOD
 #define RightWheelEncoderChannelA_Pin GPIO_PIN_6
 #define RightWheelEncoderChannelA_GPIO_Port GPIOB
 #define RightWheelEncoderChannelA_EXTI_IRQn EXTI9_5_IRQn
@@ -69,7 +79,7 @@ void Error_Handler(void);
 #define RightWheelEncoderChannelB_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+extern TIM_HandleTypeDef htim3;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
