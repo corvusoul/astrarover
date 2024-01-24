@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <mainpp.h>
+#include <thc.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,6 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim5;
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
@@ -59,13 +61,14 @@ static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+//int nowVal = 0;
 
 /* USER CODE END 0 */
 
@@ -101,8 +104,10 @@ int main(void)
   MX_TIM2_Init();
   MX_USART2_UART_Init();
   MX_TIM3_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start(&htim3);
+  HAL_TIM_Base_Start(&htim5);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
@@ -118,6 +123,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  /*if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1)
+	  {
+		  nowVal = thc_milliseconds();
+
+	  }*/
 	  	  loop();
 	  /*if(flag == 1)
 	  {
@@ -295,6 +305,51 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+  * @brief TIM5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM5_Init(void)
+{
+
+  /* USER CODE BEGIN TIM5_Init 0 */
+
+  /* USER CODE END TIM5_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM5_Init 1 */
+
+  /* USER CODE END TIM5_Init 1 */
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 45000;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 4294967295;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM5_Init 2 */
+
+  /* USER CODE END TIM5_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -367,6 +422,12 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GreenLED_Pin|OrangeLED_Pin|RedLED_Pin|BlueLED_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin : Push_Button_Pin */
+  GPIO_InitStruct.Pin = Push_Button_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Push_Button_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : LeftWheelEncoderChannelA_Pin */
   GPIO_InitStruct.Pin = LeftWheelEncoderChannelA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
@@ -407,7 +468,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+int thc_milliseconds()
+{
+	int timenow = __HAL_TIM_GET_COUNTER(&htim5);
+	return timenow;
+}
 /* USER CODE END 4 */
 
 /**

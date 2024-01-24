@@ -6,6 +6,7 @@
  */
 #include <main.h>
 #include <mainpp.h>
+#include <thc.h>
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/Int16.h>
@@ -121,8 +122,6 @@ void loop()
 		HAL_GPIO_WritePin(OrangeLED_GPIO_Port, OrangeLED_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(BlueLED_GPIO_Port, BlueLED_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(RedLED_GPIO_Port, RedLED_Pin, GPIO_PIN_RESET);
-		TIM3->CCR1 = 50;
-		HAL_Delay(300);
 		TIM3->CCR1 = 100;
 		TIM3->CCR2 = 0;
 		TIM3->CCR3 = 100;

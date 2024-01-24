@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Push_Button_Pin GPIO_PIN_0
+#define Push_Button_GPIO_Port GPIOA
 #define LeftWheelEncoderChannelA_Pin GPIO_PIN_7
 #define LeftWheelEncoderChannelA_GPIO_Port GPIOE
 #define LeftWheelEncoderChannelA_EXTI_IRQn EXTI9_5_IRQn
